@@ -209,7 +209,7 @@ splunk-investigation-1/
 
 ## 👤 Author
 
-**Ankit P.** | [LinkedIn](https://www.linkedin.com/in/ankitpandey)  
+**Ankit P.** | [LinkedIn](https://www.linkedin.com/in/ankit26)  
 Master of Cybersecurity — Holmes Institute  
 CAPT Certified | SOC Analyst
 
