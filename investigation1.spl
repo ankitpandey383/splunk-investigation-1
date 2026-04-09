@@ -1,0 +1,62 @@
+# Splunk Investigation 1 — SPL Queries
+# BOTSv1 | Joomla Brute Force Attack Analysis
+
+# ============================================================
+# Q1 - Identify all POST events to Joomla admin login
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+
+# ============================================================
+# Q2 - Count events by source IP
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+| stats count by src_ip
+
+# ============================================================
+# Q3 - Filter by attacker IP
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php" src_ip="23.22.63.114"
+
+# ============================================================
+# Q4 - Identify destination IP (web server)
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+| stats count by dest_ip
+
+# ============================================================
+# Q5 & Q6 - Extract form_data for specific timestamp
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php" src_ip="23.22.63.114"
+| spath timestamp
+| search timestamp="2016-08-10T21:46:44.453730Z"
+
+# ============================================================
+# Q7 - Table of all timestamps and form_data (sort oldest first)
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php" src_ip="23.22.63.114"
+| table timestamp, form_data
+
+# ============================================================
+# DASHBOARD - Single value count
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+| stats count
+
+# ============================================================
+# DASHBOARD - Attacks over time
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+| timechart count
+
+# ============================================================
+# DASHBOARD - Top source IPs
+# ============================================================
+index="botsv1" sourcetype="stream:http" http_method=POST uri="/joomla/administrator/index.php"
+| stats count by src_ip
+| sort -count
+
+# ============================================================
+# DASHBOARD - Confirm domain hosted on dest IP
+# ============================================================
+index="botsv1" sourcetype="stream:http" dest_ip="192.168.250.70"
+| stats count by site
